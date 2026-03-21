@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "generate:og": "node scripts/generate-og-image.mjs",
+    "build": "npm run generate:og && astro build",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "typescript": "^5.8.2"
   },
   "devDependencies": {
+    "sharp": "^0.34.5",
     "wrangler": "^4.76.0"
   }
 }

@@ -6,7 +6,10 @@ export const site = {
   email: "contato@bedatty.com",
   linkedin: "https://www.linkedin.com/in/lucas-bedatty",
   github: "https://github.com/bedatty",
-  ogImage: "/og-image.svg",
+  ogImage: "/og-image.png",
+  ogImageAlt: "Preview card for Lucas C. Bedatty portfolio with terminal-inspired design and DevOps branding.",
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
   summary:
     "Senior DevOps engineer focused on AWS platforms, infrastructure automation, security guardrails, and resilient systems for production workloads.",
   description:
