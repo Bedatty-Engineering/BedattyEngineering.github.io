@@ -12,21 +12,38 @@ const currentPath = Astro.url.pathname;
 
 <header id="site-header" class="site-header sticky top-0 z-40 border-b border-white/10 bg-ink/75 backdrop-blur-xl">
   <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-    <a href="/" class="flex items-center gap-2 font-mono text-xs font-semibold tracking-[0.08em] text-cloud sm:text-sm">
-      <span class="text-aurora">$</span>
-      <span>Lucas-Bedatty</span>
-      <span class="text-mist/60">~/</span>
-      <span class="cursor-blink text-cloud">_</span>
-    </a>
+    <div class="flex items-center justify-between gap-4">
+      <a href="/" class="flex items-center gap-2 font-mono text-xs font-semibold tracking-[0.08em] text-cloud sm:text-sm">
+        <span class="text-aurora">$</span>
+        <span>Lucas-Bedatty</span>
+        <span class="text-mist/60">~/</span>
+        <span class="cursor-blink text-cloud">_</span>
+      </a>
 
-    <nav aria-label="Primary navigation" class="grid w-full grid-cols-2 gap-2 text-xs sm:flex sm:w-auto sm:items-center sm:gap-3 sm:text-sm">
+      <button
+        id="mobile-nav-toggle"
+        type="button"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-cloud/20 bg-cloud/10 text-cloud sm:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Open navigation menu"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5">
+          <path d="M4 7h16"></path>
+          <path d="M4 12h16"></path>
+          <path d="M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav aria-label="Primary navigation" class="hidden w-full items-center gap-3 text-xs sm:flex sm:w-auto sm:text-sm">
       {
         navItems.map((item) => (
           <a
             href={item.href}
             aria-current={currentPath === item.href ? "page" : undefined}
             class:list={[
-              "flex min-h-[2.75rem] items-center justify-center rounded-md px-3 py-2 text-center font-mono text-xs uppercase tracking-[0.2em] text-mist hover:bg-cloud/10 hover:text-cloud sm:min-h-0 sm:whitespace-nowrap sm:text-sm",
+              "rounded-md px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-mist hover:bg-cloud/10 hover:text-cloud sm:whitespace-nowrap sm:text-sm",
               currentPath === item.href && "bg-cloud/10 text-cloud"
             ]}
           >
@@ -36,4 +53,57 @@ const currentPath = Astro.url.pathname;
       }
     </nav>
   </div>
+
+  <nav
+    id="mobile-nav"
+    aria-label="Mobile navigation"
+    class="mobile-nav-panel hidden border-t border-white/10 px-4 pb-4 sm:hidden"
+  >
+    <div class="mx-auto grid max-w-6xl gap-2 pt-4">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            aria-current={currentPath === item.href ? "page" : undefined}
+            class:list={[
+              "flex min-h-[2.75rem] items-center justify-center rounded-md px-3 py-2 text-center font-mono text-xs uppercase tracking-[0.2em] text-mist hover:bg-cloud/10 hover:text-cloud",
+              currentPath === item.href && "bg-cloud/10 text-cloud"
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
 </header>
+
+<script is:inline>
+  const mobileNavToggle = document.getElementById("mobile-nav-toggle");
+  const mobileNav = document.getElementById("mobile-nav");
+
+  if (mobileNavToggle instanceof HTMLButtonElement && mobileNav) {
+    const closeMobileNav = () => {
+      mobileNav.classList.add("hidden");
+      mobileNavToggle.setAttribute("aria-expanded", "false");
+      mobileNavToggle.setAttribute("aria-label", "Open navigation menu");
+    };
+
+    mobileNavToggle.addEventListener("click", () => {
+      const isOpen = !mobileNav.classList.contains("hidden");
+      mobileNav.classList.toggle("hidden", isOpen);
+      mobileNavToggle.setAttribute("aria-expanded", String(!isOpen));
+      mobileNavToggle.setAttribute("aria-label", isOpen ? "Open navigation menu" : "Close navigation menu");
+    });
+
+    mobileNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMobileNav);
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 640) {
+        closeMobileNav();
+      }
+    });
+  }
+</script>
